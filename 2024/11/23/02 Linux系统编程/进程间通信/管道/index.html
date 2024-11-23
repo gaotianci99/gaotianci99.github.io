@@ -100,28 +100,6 @@
 								<li class="directory">
 									<a href="#" class="directory">
 										<i class="fa fa-plus-square-o"></i>
-										01 Linux网络编程
-									</a>
-									
-							<ul>
-								<li class="file">
-									<a href="/2024/11/23/01%20Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B/">
-                     
-										    进程
-                     
-									</a>
-								</li>
-								<div class="article-toc" style="display: none;"></div>
-							</ul>
-			
-								</li>
-								
-							</ul>
-			
-							<ul>
-								<li class="directory">
-									<a href="#" class="directory">
-										<i class="fa fa-plus-square-o"></i>
 										02 Linux系统编程
 									</a>
 									
@@ -184,17 +162,6 @@
 								
 							</ul>
 			
-							<ul>
-								<li class="file">
-									<a href="/2024/11/23/title/">
-                     
-										    title
-                     
-									</a>
-								</li>
-								<div class="article-toc" style="display: none;"></div>
-							</ul>
-			
 		</div>
 	</div>
 </div>
@@ -228,9 +195,22 @@
 
 <!-- content -->
 <div id="article-content">
-	<h1 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h1><p>Linux环境下，进程地址空间相互独立，每个进程各自有不同的用户地址空间。任何一个进程的全局变量在另一个进程中都看不到，所以进程和进程之间不能相互访问，要交换数据必须通过内核，在内核中开辟一块缓冲区，进程1把数据从用户空间拷贝到内核缓冲区，进程2再从内核缓冲区把数据读走，内核提供的这种机制称为进程间通信（IPC，InterProcess Communication）</p>
-<h2 id="1-匿名管道pipe"><a href="#1-匿名管道pipe" class="headerlink" title="1. 匿名管道pipe"></a>1. 匿名管道pipe</h2><h2 id="2-有名管道FIFO"><a href="#2-有名管道FIFO" class="headerlink" title="2. 有名管道FIFO"></a>2. 有名管道FIFO</h2><p><img src="https://gitee.com/gaotianci99/typora/raw/master/img/image-20241123203034354.png" alt="image-20241123203034354"></p>
-
+	<p>本文参考：<a target="_blank" rel="noopener" href="https://subingwen.cn/linux/pipe/#1-%E7%AE%A1%E9%81%93">https://subingwen.cn/linux/pipe/#1-%E7%AE%A1%E9%81%93</a></p>
+<p>Linux环境下，进程地址空间相互独立，每个进程各自有不同的用户地址空间。任何一个进程的全局变量在另一个进程中都看不到，所以进程和进程之间不能相互访问，要交换数据必须通过内核，在内核中开辟一块缓冲区，进程1把数据从用户空间拷贝到内核缓冲区，进程2再从内核缓冲区把数据读走，内核提供的这种机制称为进程间通信（IPC，InterProcess Communication）</p>
+<ul>
+<li>管道对应的内核缓冲区大小是固定的，默认为4k；</li>
+<li>管道分为两部分：读端和写端（队列的两端），数据从写端进入管道，从读端流出管道；</li>
+<li>管道中的数据只能读一次，读操作执行之后，数据就没有了；</li>
+<li>管道式单工的：数据只能单向流动，从写端流向读端；</li>
+<li>对管道的操作（读、写）默认是阻塞的；<ul>
+<li>读管道：管道中没有数据，读操作被阻塞，当管道中有数据之后阻塞才解除；</li>
+<li>写管道：管道被写满了，写数据的操作被阻塞，当管道变为不满的状态，写阻塞解除。</li>
+</ul>
+</li>
+</ul>
+<h1 id="1-匿名管道pipe"><a href="#1-匿名管道pipe" class="headerlink" title="1. 匿名管道pipe"></a>1. 匿名管道pipe</h1><p><font color = red>匿名管道pipe只适用于有血缘关系的进程之间进行通信。</font></p>
+<p><img src="https://raw.githubusercontent.com/gaotianci99/image/master/img20241123222625.png#pic_center"></p>
+<h1 id="2-有名管道FIFO"><a href="#2-有名管道FIFO" class="headerlink" title="2. 有名管道FIFO"></a>2. 有名管道FIFO</h1>
 </div>
 
 <!-- post-guide -->
@@ -245,11 +225,6 @@
             
         </div>
         <div class="item right">
-            
-              <a href="/2024/11/23/01%20Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B/">
-                aaaaa
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </a>
             
         </div>
     </div>
