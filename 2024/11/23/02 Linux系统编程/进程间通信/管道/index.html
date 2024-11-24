@@ -91,10 +91,43 @@
 	<button id="sidebar-toggle" class="toggle" ><i class="fa fa-arrow-right " aria-hidden="true"></i></button>
 	
 	<div id="site-toc">
-		<input id="search-input" class="search-input" type="search" placeholder="Press Enter to search">
+		<input id="search-input" class="search-input" type="search" placeholder="按回车全站搜索">
 		<div id="tree">
 			
 
+			
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										01 Linux网络编程
+									</a>
+									
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										多路IO转接
+									</a>
+									
+							<ul>
+								<li class="file">
+									<a href="/2024/11/24/01%20Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/epoll/">
+                     
+										    epoll
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+								</li>
+								
+							</ul>
 			
 							<ul>
 								<li class="directory">
@@ -209,7 +242,20 @@
 </li>
 </ul>
 <h1 id="1-匿名管道pipe"><a href="#1-匿名管道pipe" class="headerlink" title="1. 匿名管道pipe"></a>1. 匿名管道pipe</h1><p><font color = red>匿名管道pipe只适用于有血缘关系的进程之间进行通信。</font></p>
-<p><img src="https://raw.githubusercontent.com/gaotianci99/image/master/img20241123222625.png#pic_center"></p>
+<p><code>pipe()</code>函数原型如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">pipe</span><span class="params">(<span class="type">int</span> pipefd[<span class="number">2</span>])</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>功能：</strong>父进程使用pipe()函数创建一个管道，并将其PCB里的文件描述符指向管道的读写两端；</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li>pipefd[2]: 传出参数。pipefd[0]表示读端文件描述符，pipefd[1]表示写端文件描述符</li>
+</ul>
+<p><strong>返回值：</strong></p>
+<ul>
+<li>成功返回0，失败返回-1并设置errno</li>
+</ul>
+<p>​	</p>
+<p><img src="https://raw.githubusercontent.com/gaotianci99/image/master/img20241123223759.png#pic_right"></p>
 <h1 id="2-有名管道FIFO"><a href="#2-有名管道FIFO" class="headerlink" title="2. 有名管道FIFO"></a>2. 有名管道FIFO</h1>
 </div>
 

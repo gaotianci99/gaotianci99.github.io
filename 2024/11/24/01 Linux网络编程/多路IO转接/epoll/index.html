@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+	
+	<!-- title -->
+	
+	<title>
+	
+		epoll | 
+	 
+	TanG&#39;s Blog
+	</title>
+	
+	<!-- keywords,description -->
+	
+	
+
+	<!-- favicon -->
+	
+
+
+	<!-- search -->
+	<script>
+		var searchEngine = "";
+		if(typeof searchEngine == "undefined" || searchEngine == null || searchEngine == ""){
+			searchEngine = "https://www.google.com/search?q=";
+		}
+		var homeHost = "";
+		if(typeof homeHost == "undefined" || homeHost == null || homeHost == ""){
+			homeHost = window.location.host;
+		}
+	</script>
+
+
+	
+<link rel="stylesheet" href="/css/main.css">
+
+	
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/darcula.min.css">
+
+	
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+
+	
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+
+	
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+	
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/highlight.min.js"></script>
+
+	
+<script src="https://cdn.jsdelivr.net/npm/jquery-pjax@2.0.1/jquery.pjax.min.js"></script>
+
+	
+<script src="/js/main.js"></script>
+
+
+	
+	
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+	<header id="header">
+    <a id="title" href="/" class="logo">TanG's Blog</a>
+
+	<ul id="menu">
+    
+
+    
+
+    
+
+    
+  
+    
+	</ul>
+</header>
+
+	
+<div id="sidebar">
+	<button id="sidebar-toggle" class="toggle" ><i class="fa fa-arrow-right " aria-hidden="true"></i></button>
+	
+	<div id="site-toc">
+		<input id="search-input" class="search-input" type="search" placeholder="按回车全站搜索">
+		<div id="tree">
+			
+
+			
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										01 Linux网络编程
+									</a>
+									
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										多路IO转接
+									</a>
+									
+							<ul>
+								<li class="file active">
+									<a href="/2024/11/24/01%20Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/epoll/">
+                     
+										    epoll
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										02 Linux系统编程
+									</a>
+									
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										进程间通信
+									</a>
+									
+							<ul>
+								<li class="file">
+									<a href="/2024/11/23/02%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E4%BF%A1%E5%8F%B7/">
+                     
+										    信号
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file">
+									<a href="/2024/11/23/02%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/">
+                     
+										    共享内存
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file">
+									<a href="/2024/11/23/02%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84(mmap)/">
+                     
+										    内存映射(mmap)
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file">
+									<a href="/2024/11/23/02%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%AE%A1%E9%81%93/">
+                     
+										    管道
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+		</div>
+	</div>
+</div>
+
+	<!-- 引入正文 -->
+	<div id="content" class="content">
+		<h1 id="article-title">
+	epoll
+</h1>
+
+<!-- meta -->
+<div class="article-meta">
+	
+
+	<span>TanG</span>
+	<span>2024-11-24 12:27:44</span>
+
+  <div id="article-categories">
+    
+		  <span>Categories：</span>
+      
+    
+
+    
+		    <span>Tags：</span>
+        
+    
+  </div>
+
+</div>
+
+<!-- content -->
+<div id="article-content">
+	<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><p>epoll的全称是eventpoll，是Linux内核实现IO多路转接&#x2F;复用的一个实现。</p>
+<p><strong>IO多路转接</strong>：在一个操作里同时监听多个输入输出源，在其中一个或多个输入输出源可用的时候返回，然后对其进行读写操作。</p>
+<ul>
+<li><font color=HotPink>对于待检测结合select和poll是基于线性方式处理的, epoll是基于红黑树来管理待检测集和的</font></li>
+<li><font color=HotPink>select和poll每次都会线性扫描整个待检测结合，集和越大速度越慢，epoll使用回调机制，效率高，处理效率也不会随着检测集合的变大而下降</font></li>
+<li><font color=HotPink>select和poll工作过程中存在内核&#x2F;用户区空间数据的频繁拷贝问题，在epoll中内核和用户区使用的是共享内存(基于mmap内存映射区实现)，省去了不必要的拷贝</font></li>
+<li><font color=HotPink>使用epoll没有最大文件描述符的限制，仅受系统中进程能打开的最大文件数目限制</font></li>
+</ul>
+<h1 id="2-操作函数"><a href="#2-操作函数" class="headerlink" title="2. 操作函数"></a>2. 操作函数</h1><p>在epoll中一共提供三个API函数，分别处理不同的操作，函数原型如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="comment">// 创建epoll实例，通过一颗红黑树管理待检测集和</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">epoll_create</span><span class="params">(<span class="type">int</span> size)</span>;</span><br><span class="line"><span class="comment">// 管理红黑树上的文件描述符（添加、删除和修改）</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">epoll_ctl</span><span class="params">(<span class="type">int</span> epfd, <span class="type">int</span> op, <span class="type">int</span> fd, <span class="keyword">struct</span> epoll_event *event)</span>;</span><br><span class="line"><span class="comment">// 检测epoll树中是否有就绪的文件描述符</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">epoll_wait</span><span class="params">(<span class="type">int</span> epfd, <span class="keyword">struct</span> epoll_event *events, <span class="type">int</span> maxevents, <span class="type">int</span> timeout)</span>;</span><br></pre></td></tr></table></figure>
+
+<p><font color = red> 注意：</font><code>epoll_ctl()</code>里的event是一个结构体指针，而<code>epoll_wait()</code>里的events是一个数组。</p>
+<h2 id="2-1-epoll-create-函数"><a href="#2-1-epoll-create-函数" class="headerlink" title="2.1 epoll_create()函数"></a>2.1 epoll_create()函数</h2><p>用于创建epoll红黑树</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">epoll_create</span><span class="params">(<span class="type">int</span> size)</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数</strong>：size目前内核还没有实际使用，只要大于0就行</p>
+<p><strong>返回值</strong>：成功，返回创建的epoll红黑树的文件描述符；失败，返回-1并设置errno</p>
+<p><img src="https://raw.githubusercontent.com/gaotianci99/image/master/imgimage-20241124144110907.png" alt="image-20241124144110907"></p>
+<h2 id="2-2-epoll-ctl-函数"><a href="#2-2-epoll-ctl-函数" class="headerlink" title="2.2 epoll_ctl()函数"></a>2.2 epoll_ctl()函数</h2><p>用于管理红黑树实例上的节点，可以进行添加、删除、修改操作。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">epoll_ctl</span><span class="params">(<span class="type">int</span> epfd, <span class="type">int</span> op, <span class="type">int</span> fd, <span class="keyword">struct</span> epoll_event *event)</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span>&#123;</span></span><br><span class="line">    <span class="type">uint32_t</span> events; <span class="comment">//EPOLLIN表示读事件，EPOLLOUT表示写事件，EPOLLERR表示异常事件</span></span><br><span class="line">    <span class="type">epoll_data_t</span> data; <span class="comment">//用户数据变量，通常使用里面的fd成员</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">union</span> <span class="title">epoll_data</span>&#123;</span></span><br><span class="line">    <span class="type">void</span> *ptr;</span><br><span class="line">    <span class="type">int</span> fd; <span class="comment">//通常情况使用这个，和epoll_ctl的第三个参数相同即可</span></span><br><span class="line">    <span class="type">uint32_t</span> u32;</span><br><span class="line">    <span class="type">uint64_t</span> u64;</span><br><span class="line">&#125;<span class="type">epoll_data_t</span>;</span><br><span class="line">                   </span><br></pre></td></tr></table></figure>
+
+<p><strong>参数</strong>：</p>
+<ul>
+<li><p>epfd: <code>epoll_create()</code>的返回值，通过这个参数找到epoll红黑树实例；</p>
+</li>
+<li><p>op：枚举值，控制通过该函数执行什么操作。</p>
+<ul>
+<li>EPOLL_CTL_ADD：在epoll模型中添加新节点；</li>
+<li>EPOLL_CTL_MOD：修改epoll模型中已经存在的节点；</li>
+<li>EPOLL_CTL_DEL：删除epoll模型中的指定的节点。</li>
+</ul>
+</li>
+<li><p>fd：文件描述符，即要添加&#x2F;修改&#x2F;删除的文件描述符。</p>
+</li>
+<li><p>event：epoll事件，用于修饰第三个参数对应的文件描述符的，指定检测这个文件描述符的什么事件。</p>
+<ul>
+<li><pre><code class="c">#include &lt;sys/epoll.h&gt;
+ 
+enum EPOLL_EVENTS
+&#123;
+    EPOLLIN = 0x001, //读事件
+    EPOLLPRI = 0x002,
+    EPOLLOUT = 0x004, //写事件
+    EPOLLRDNORM = 0x040,
+    EPOLLRDBAND = 0x080,
+    EPOLLWRNORM = 0x100,
+    EPOLLWRBAND = 0x200,
+    EPOLLMSG = 0x400,
+    EPOLLERR = 0x008, //出错事件
+    EPOLLHUP = 0x010, //出错事件
+    EPOLLRDHUP = 0x2000,
+    EPOLLEXCLUSIVE = 1u &lt;&lt; 28,
+    EPOLLWAKEUP = 1u &lt;&lt; 29,
+    EPOLLONESHOT = 1u &lt;&lt; 30,
+    EPOLLET = 1u &lt;&lt; 31 //边缘触发
+  &#125;;
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">**返回值**：成功返回0，失败返回-1并设置errno。</span><br><span class="line"></span><br><span class="line">![image-20241124150744145](https://raw.githubusercontent.com/gaotianci99/image/master/imgimage-20241124150744145.png)</span><br><span class="line"></span><br><span class="line">## 2.3 epoll_wait()函数</span><br><span class="line"></span><br><span class="line">epoll_wait()用于监听套接字事件，可以通过设置timeout来控制监听的行为为阻塞模式还是超时模式。</span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line">#include &lt;sys/epoll.h&gt;</span><br><span class="line"></span><br><span class="line">int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>参数</strong>：</p>
+<ul>
+<li>epfd： epoll红黑树的文件描述符</li>
+<li>events：epoll事件数组</li>
+<li>maxevents：epoll事件数组长度</li>
+<li>timeout：超时时间</li>
+</ul>
+<p><strong>返回值</strong>：小于0出错，等于0超时，大于0表示返回就绪事件个数。</p>
+<p><img src="https://raw.githubusercontent.com/gaotianci99/image/master/imgimage-20241124151537687.png" alt="image-20241124151537687"></p>
+<h1 id="3-epoll的使用"><a href="#3-epoll的使用" class="headerlink" title="3. epoll的使用"></a>3. epoll的使用</h1><p>在服务器端使用epoll进行IO多路转接的操作步骤如下：</p>
+<h2 id="3-1-操作步骤"><a href="#3-1-操作步骤" class="headerlink" title="3.1 操作步骤"></a>3.1 操作步骤</h2><p>（1）创建监听的套接字</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> lfd = socket(AF_INET,SOCK_STREAM,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>（2）设置端口复用（可选）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> opt = <span class="number">1</span>;</span><br><span class="line">setsockopt(lfd, SOL_SOCKET,SO_REUSEADDR,&amp;opt,<span class="keyword">sizeof</span>(opt));</span><br></pre></td></tr></table></figure>
+
+<p>（3）使用本地的IP与端口和监听的套接字进行绑定</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> ret = bind(lfd, (<span class="keyword">struct</span> sockaddr*)&amp;serv_addr,<span class="keyword">sizeof</span>(serv_addr));</span><br></pre></td></tr></table></figure>
+
+<p>（4）给监听的套接字设置监听</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listen(fd,<span class="number">128</span>)</span><br></pre></td></tr></table></figure>
+
+<p>（5）创建epoll实例对象</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> epfd = epoll_create(<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+
+<p>（6）将用于监听的套接字添加到epoll实例中</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">ev</span>;</span></span><br><span class="line">ev.events = EPOLLIN; <span class="comment">// 检测lfd读缓冲区是否有数据</span></span><br><span class="line">ev.data.fd = lfd;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> ret = epoll_ctl(epfd, EPOLL_CTL_ADD, lfd, &amp;ev);</span><br></pre></td></tr></table></figure>
+
+<p>（7）检测添加到epoll实例中的文件描述符是否已就绪，并将这些已就绪的文件描述符进行处理</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> num = epoll_wait(epfd, evs, size, <span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>如果是监听的文件描述符，和新客户端建立连接，将得到的文件描述符添加到epoll实例中</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> cfd = accept(curfd,<span class="literal">NULL</span>,<span class="literal">NULL</span>);</span><br><span class="line">ev.events = EPOLLIN;</span><br><span class="line">ev.data.fd = cfd;</span><br><span class="line"><span class="comment">//新得到文件描述符加入的epoll模型中</span></span><br><span class="line">epoll_ctl(epfd, EPOLL_CTL_ADD, cfd, &amp;ev);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果得到的是通信的文件描述符，和对应的客户端通信，如果连接已断开，将该文件描述符从epoll实例中删除 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int len = recv(curfd, buf, sizeof(buf), 0);</span><br><span class="line">if (len == 0)&#123;</span><br><span class="line">    epoll_ctl(epfd, EPOLL_CTL_DEL, cufd, NULL);</span><br><span class="line">    close(curfd);</span><br><span class="line">&#125;else if(len &gt; 0)&#123;</span><br><span class="line">	send(curfd, buf, len, 0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>（8）循环执行（7）</p>
+<h2 id="3-2-示例代码"><a href="#3-2-示例代码" class="headerlink" title="3.2 示例代码"></a>3.2 示例代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctype.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//server</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> *argv[])</span>&#123;</span><br><span class="line">    <span class="comment">// 1.socket()创建监听套接字</span></span><br><span class="line">    <span class="type">int</span> lfd = socket(AF_INET,SOCK_STREAM,<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (lfd == <span class="number">-1</span>)&#123;</span><br><span class="line">        perror(<span class="string">&quot;socket error&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 2. bind()绑定</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">serv_addr</span>;</span></span><br><span class="line">    <span class="built_in">memset</span>(&amp;serv_adr, <span class="number">0</span>, <span class="keyword">sizeof</span>(serv_addr));</span><br><span class="line">    serv_addr.sin_family = AF_INET;</span><br><span class="line">    serv_addr.sin_port = htons(<span class="number">9999</span>);</span><br><span class="line">    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. listen()监听最大上限</span></span><br><span class="line">    <span class="type">int</span> ret = listen(lfd,<span class="number">64</span>);</span><br><span class="line">    <span class="keyword">if</span> (ret == <span class="number">-1</span>)&#123;</span><br><span class="line">        perror(<span class="string">&quot;listen error&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//4. epoll_create()创建epoll红黑树模型</span></span><br><span class="line">    <span class="type">int</span> epfd = epoll_create(<span class="number">100</span>);</span><br><span class="line">    <span class="keyword">if</span> (epfd == <span class="number">-1</span>)&#123;</span><br><span class="line">        perror(<span class="string">&quot;epoll_create&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//5. epoll_ctl将监听文件描述符添加入epoll实例红黑树 </span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//6. 循环持续检测</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</div>
+
+<!-- post-guide -->
+
+    <div class="post-guide">
+        <div class="item left">
+            
+        </div>
+        <div class="item right">
+            
+              <a href="/2024/11/23/02%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E4%BF%A1%E5%8F%B7/">
+                信号
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+              </a>
+            
+        </div>
+    </div>
+
+
+<!-- comment - giscus -->
+
+
+<!-- comment - valine -->
+
+
+<script>
+	
+	
+</script>
+
+	</div>
+	<div id="footer">
+	<p>
+	©<span id="footerYear-start"></span>-<span id="footerYear-end"></span>
+
+	
+        <a href='/' target="_blank">TanG</a>
+	
+	
+	
+	<br>
+	Theme <a href="//github.com/wujun234/hexo-theme-tree" target="_blank">Tree</a>
+	by <a href="//wujun.me" target="_blank">Wu Jun</a>
+	Powered by <a href="//hexo.io" target="_blank">Hexo</a>
+	</p>
+</div>
+
+
+<script type="text/javascript">
+	document.getElementById('footerYear-start').innerHTML = new Date().getFullYear() + '';
+</script>
+
+<script type="text/javascript">
+	document.getElementById('footerYear-end').innerHTML = new Date().getFullYear() + '';
+</script>
+
+	<button id="totop-toggle" class="toggle"><i class="fa fa-angle-double-up" aria-hidden="true"></i></button>
+</body>
+</html>
