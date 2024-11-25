@@ -323,18 +323,19 @@
 		<div id="index">
 	
 		<div class="index-li">
-			<a href="/2024/11/25/05%20Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/select/">
+			<a href="/2024/11/23/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/4.%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98(shm)/">
 				<h2 class="index-title">
-					select
+					4.共享内存(shm)
 				</h2>
 				<div class="index-brief">
-					1. IO多路转接（复用）IO多路转接也称为IO多路复用，它是一种网络通信的手段（机制），通过这种方式可以同时检测多个文件描述符并且这个过程是阻塞的，一旦检测到有文件描述符就绪（可以读数据或者可以写数据）程序的阻塞就会被解除，之后就可以基于这些（一个&#x2F;多个）就绪的文件描述符进行通信了。
-多
+					共享内存不同于内存映射区，它不属于任何进程，并且不受进程生命周期的影响。通过调用Linux提供的系统函数就可得到这块共享内存。
+使用之前要让进程与共享内存进行关联，得到共享内存的起始地址之后就可以进行读写操作了，进程也可以和这块共享内存解除关联，解除关联之后就不能操作这块内存了。
+在所有进程间通信的
 					...
 				</div>
 			</a>
                 <div class="article-meta">
-				    <span>2024-11-25</span>
+				    <span>2024-11-23</span>
                     
                             
                     
@@ -342,17 +343,18 @@
 		</div>	
 	
 		<div class="index-li">
-			<a href="/2024/11/25/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/7.%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+			<a href="/2024/11/23/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84(mmap)/">
 				<h2 class="index-title">
-					7.消息队列
+					3.内存映射(mmap)
 				</h2>
 				<div class="index-brief">
-					
+					1. 内存映射区如果想要实现进程间通信，可以通过函数创建一块内存映射区，和管道不同的是管道对应的内存空间在内核中，而内存映射区对应的内存空间在进程的用户区，也就是说：进程间通信使用的内存映射区不是一块，而是在每个进程内部都有一块。
+由于每个进程的地址空间是独立的，各个进程之间也不可能直接访问对方的内
 					...
 				</div>
 			</a>
                 <div class="article-meta">
-				    <span>2024-11-25</span>
+				    <span>2024-11-23</span>
                     
                             
                     
@@ -360,148 +362,13 @@
 		</div>	
 	
 		<div class="index-li">
-			<a href="/2024/11/25/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/6.%E6%9C%AC%E5%9C%B0%E5%A5%97%E6%8E%A5%E5%AD%97/">
+			<a href="/2024/11/23/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/1.%E7%AE%A1%E9%81%93/">
 				<h2 class="index-title">
-					6.本地套接字
+					1.管道
 				</h2>
 				<div class="index-brief">
-					
-					...
-				</div>
-			</a>
-                <div class="article-meta">
-				    <span>2024-11-25</span>
-                    
-                            
-                    
-                </div>
-		</div>	
-	
-		<div class="index-li">
-			<a href="/2024/11/25/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/2.%E6%96%87%E4%BB%B6/">
-				<h2 class="index-title">
-					2.文件
-				</h2>
-				<div class="index-brief">
-					
-					...
-				</div>
-			</a>
-                <div class="article-meta">
-				    <span>2024-11-25</span>
-                    
-                            
-                    
-                </div>
-		</div>	
-	
-		<div class="index-li">
-			<a href="/2024/11/25/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%E5%88%86%E7%B1%BB/">
-				<h2 class="index-title">
-					进程通信分类
-				</h2>
-				<div class="index-brief">
-					
-
-					...
-				</div>
-			</a>
-                <div class="article-meta">
-				    <span>2024-11-25</span>
-                    
-                            
-                    
-                </div>
-		</div>	
-	
-		<div class="index-li">
-			<a href="/2024/11/24/01%20C%E8%AF%AD%E8%A8%80/01/">
-				<h2 class="index-title">
-					01
-				</h2>
-				<div class="index-brief">
-					1. C语言程序与可执行文件编写一段C语言程序：
-hello.c程序
-12345#include &lt;stdio.h&gt;int main()&#123;    printf(&quot;HelloWorld!\n&quot;);    return 0;&#125;
-
-使用gcc hello
-					...
-				</div>
-			</a>
-                <div class="article-meta">
-				    <span>2024-11-24</span>
-                    
-                            
-                    
-                </div>
-		</div>	
-	
-		<div class="index-li">
-			<a href="/2024/11/24/06%20%E5%A4%A7%E6%A8%A1%E5%9E%8BLLM/LangChain/finetune/">
-				<h2 class="index-title">
-					finetune
-				</h2>
-				<div class="index-brief">
-					
-					...
-				</div>
-			</a>
-                <div class="article-meta">
-				    <span>2024-11-24</span>
-                    
-                            
-                    
-                </div>
-		</div>	
-	
-		<div class="index-li">
-			<a href="/2024/11/24/06%20%E5%A4%A7%E6%A8%A1%E5%9E%8BLLM/LangChain/Langchain/">
-				<h2 class="index-title">
-					Langchain
-				</h2>
-				<div class="index-brief">
-					1. Langchain是什么？​	LLM通过这个langchain框架，不仅能回答通用问题，还能从自己的数据库中或文件中提取信息，并根据这些信息执行具体操作。
-​	Langchain是一个开源框架，它允许开发人员将像GPT-4这样的大型语言模型与外部的计算和数据源结合起来。
-​	Langchain
-					...
-				</div>
-			</a>
-                <div class="article-meta">
-				    <span>2024-11-24</span>
-                    
-                            
-                    
-                </div>
-		</div>	
-	
-		<div class="index-li">
-			<a href="/2024/11/24/05%20Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/epoll/">
-				<h2 class="index-title">
-					epoll
-				</h2>
-				<div class="index-brief">
-					1. 概述epoll的全称是eventpoll，是Linux内核实现IO多路转接&#x2F;复用的一个实现。
-IO多路转接：在一个操作里同时监听多个输入输出源，在其中一个或多个输入输出源可用的时候返回，然后对其进行读写操作。
-
-对于待检测结合select和poll是基于线性方式处理的, epoll是
-					...
-				</div>
-			</a>
-                <div class="article-meta">
-				    <span>2024-11-24</span>
-                    
-                            
-                    
-                </div>
-		</div>	
-	
-		<div class="index-li">
-			<a href="/2024/11/23/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/5.%20%E4%BF%A1%E5%8F%B7/">
-				<h2 class="index-title">
-					5. 信号
-				</h2>
-				<div class="index-brief">
-					
+					本文参考：https://subingwen.cn/linux/pipe/#1-%E7%AE%A1%E9%81%93
+Linux环境下，进程地址空间相互独立，每个进程各自有不同的用户地址空间。任何一个进程的全局变量在另一个进程中都看不到，所以进程和进程之间不能相互访问，要交换数据必须通过内核，在内核
 					...
 				</div>
 			</a>
@@ -516,7 +383,7 @@ IO多路转接：在一个操作里同时监听多个输入输出源，在其中
 	
 	<div id="index-paginator">
 		
-			<span class="page-number current">1</span><a class="page-number" href="/archives/2024/page/2/">2</a><a class="extend next" rel="next" href="/archives/2024/page/2/">&gt;</a>
+			<a class="extend prev" rel="prev" href="/archives/">&lt;</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
 		
 	</div>
 </div>

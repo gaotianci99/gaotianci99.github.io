@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+	
+	<!-- title -->
+	
+	<title>
+	
+		3.内存映射(mmap) | 
+	 
+	TanG&#39;s Blog
+	</title>
+	
+	<!-- keywords,description -->
+	
+	
+
+	<!-- favicon -->
+	
+
+
+	<!-- search -->
+	<script>
+		var searchEngine = "";
+		if(typeof searchEngine == "undefined" || searchEngine == null || searchEngine == ""){
+			searchEngine = "https://www.google.com/search?q=";
+		}
+		var homeHost = "";
+		if(typeof homeHost == "undefined" || homeHost == null || homeHost == ""){
+			homeHost = window.location.host;
+		}
+	</script>
+
+
+	
+<link rel="stylesheet" href="/css/main.css">
+
+	
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/darcula.min.css">
+
+	
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+
+	
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+
+	
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+	
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/highlight.min.js"></script>
+
+	
+<script src="https://cdn.jsdelivr.net/npm/jquery-pjax@2.0.1/jquery.pjax.min.js"></script>
+
+	
+<script src="/js/main.js"></script>
+
+
+	
+	
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+	<header id="header">
+    <a id="title" href="/" class="logo">TanG's Blog</a>
+
+	<ul id="menu">
+    
+
+    
+
+    
+
+    
+  
+    
+	</ul>
+</header>
+
+	
+<div id="sidebar">
+	<button id="sidebar-toggle" class="toggle" ><i class="fa fa-arrow-right " aria-hidden="true"></i></button>
+	
+	<div id="site-toc">
+		<input id="search-input" class="search-input" type="search" placeholder="Press Enter to search">
+		<div id="tree">
+			
+
+			
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										01 C语言
+									</a>
+									
+							<ul>
+								<li class="file">
+									<a href="/2024/11/24/01%20C%E8%AF%AD%E8%A8%80/01/">
+                     
+										    01
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										04 Linux系统编程
+									</a>
+									
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										进程间通信
+									</a>
+									
+							<ul>
+								<li class="file">
+									<a href="/2024/11/23/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/1.%E7%AE%A1%E9%81%93/">
+                     
+										    1.管道
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file">
+									<a href="/2024/11/25/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/2.%E6%96%87%E4%BB%B6/">
+                     
+										    2.文件
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file active">
+									<a href="/2024/11/23/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84(mmap)/">
+                     
+										    3.内存映射(mmap)
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file">
+									<a href="/2024/11/23/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/4.%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98(shm)/">
+                     
+										    4.共享内存(shm)
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file">
+									<a href="/2024/11/23/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/5.%20%E4%BF%A1%E5%8F%B7/">
+                     
+										    5. 信号
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file">
+									<a href="/2024/11/25/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/6.%E6%9C%AC%E5%9C%B0%E5%A5%97%E6%8E%A5%E5%AD%97/">
+                     
+										    6.本地套接字
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file">
+									<a href="/2024/11/25/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/7.%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+                     
+										    7.消息队列
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file">
+									<a href="/2024/11/25/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%E5%88%86%E7%B1%BB/">
+                     
+										    进程通信分类
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										05 Linux网络编程
+									</a>
+									
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										多路IO转接
+									</a>
+									
+							<ul>
+								<li class="file">
+									<a href="/2024/11/24/05%20Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/epoll/">
+                     
+										    epoll
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file">
+									<a href="/2024/11/25/05%20Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/select/">
+                     
+										    select
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										06 大模型LLM
+									</a>
+									
+							<ul>
+								<li class="directory">
+									<a href="#" class="directory">
+										<i class="fa fa-plus-square-o"></i>
+										LangChain
+									</a>
+									
+							<ul>
+								<li class="file">
+									<a href="/2024/11/24/06%20%E5%A4%A7%E6%A8%A1%E5%9E%8BLLM/LangChain/Langchain/">
+                     
+										    Langchain
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+							<ul>
+								<li class="file">
+									<a href="/2024/11/24/06%20%E5%A4%A7%E6%A8%A1%E5%9E%8BLLM/LangChain/finetune/">
+                     
+										    finetune
+                     
+									</a>
+								</li>
+								<div class="article-toc" style="display: none;"></div>
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+								</li>
+								
+							</ul>
+			
+		</div>
+	</div>
+</div>
+
+	<!-- 引入正文 -->
+	<div id="content" class="content">
+		<h1 id="article-title">
+	3.内存映射(mmap)
+</h1>
+
+<!-- meta -->
+<div class="article-meta">
+	
+
+	<span>TanG</span>
+	<span>2024-11-23 18:22:42</span>
+
+  <div id="article-categories">
+    
+		  <span>Categories：</span>
+      
+    
+
+    
+		    <span>Tags：</span>
+        
+    
+  </div>
+
+</div>
+
+<!-- content -->
+<div id="article-content">
+	<h1 id="1-内存映射区"><a href="#1-内存映射区" class="headerlink" title="1. 内存映射区"></a>1. 内存映射区</h1><p>如果想要实现进程间通信，可以通过函数创建一块内存映射区，和管道不同的是管道对应的内存空间在内核中，而内存映射区对应的内存空间在进程的用户区，也就是说：<font color = deeppink><strong>进程间通信使用的内存映射区不是一块，而是在每个进程内部都有一块</strong></font>。</p>
+<p>由于每个进程的地址空间是独立的，各个进程之间也不可能直接访问对方的内存映射区，<strong>需要通信的进程将各自的内存映射区和同一个磁盘文件进行映射</strong>，这样进程之间就可以通过磁盘文件这个唯一的桥梁完成数据的交互了。</p>
+<p><img src="https://raw.githubusercontent.com/gaotianci99/image/master/imgimage-20241125103044252.png" alt="image-20241125103044252"></p>
+<p><font color = deeppink><strong>磁盘文件数据可以完全加载到进程的内存映射区也可以部分加载到进程的内存映射区，当进程A中的内存映射区数据被修改了，数据会被自动同步到磁盘文件，同时和磁盘文件建立映射关系的其他进程内存映射区中的数据也会和磁盘文件进行数据的实时同步，这个同步机制保障了各个进程之间的数据共享。</strong></font></p>
+<p>使用内存映射区域既可以进程有血缘关系实现通信，也可以进程没有血缘关系实现进程通信。</p>
+<h2 id="1-1-创建内存映射区函数mmap"><a href="#1-1-创建内存映射区函数mmap" class="headerlink" title="1.1 创建内存映射区函数mmap()"></a>1.1 创建内存映射区函数mmap()</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/mman.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">mmap</span><span class="params">(<span class="type">void</span> *addr, <span class="type">size_t</span> length, <span class="type">int</span> prot, <span class="type">int</span> flags, <span class="type">int</span> fd, <span class="type">off_t</span> offset)</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li>addr: 从动态库加载区的什么位置开始创建内存映射区，一般指定为NULL，委托内核分配</li>
+<li>length：创建的内存映射区的大小（单位：字节），实际上这个大小是按照4k的整数倍去分配的</li>
+<li>prot：对内存映射区的操作权限<ul>
+<li>PROT_READ：读内存映射区</li>
+<li>PROT_WRITE：写内存映射区</li>
+<li>PRTO_READ | PROT_WRITE：读写权限</li>
+</ul>
+</li>
+<li>flags：<ul>
+<li>MAP_SHARED：多个进程可以共享数据，进行映射区数据同步</li>
+<li>MAP_PRIVATE：映射区数据是私有的，不能同步给其他进程</li>
+</ul>
+</li>
+<li>fd：打开磁盘文件的文件描述符。内存映射区根据这个fd和磁盘文件建立关联</li>
+<li>offset：磁盘文件的偏移量。文件从偏移到的位置开始进行数据映射，使用这个参数需要注意两个问题：<ul>
+<li>偏移量必须是4k的整数倍，写0代表不偏移</li>
+<li>这个参数值必须大于0</li>
+</ul>
+</li>
+</ul>
+<p><strong>返回值：</strong></p>
+<ul>
+<li>成功：返回一个内存映射区的起始地址</li>
+<li>失败：MAP_FAILED (that is, (void *)-1)</li>
+</ul>
+<h2 id="1-2-释放内存映射区函数munmap"><a href="#1-2-释放内存映射区函数munmap" class="headerlink" title="1.2 释放内存映射区函数munmap()"></a>1.2 释放内存映射区函数munmap()</h2><p><strong>参数：</strong></p>
+<ul>
+<li>addr：mmap()的返回值，即创建的内存映射区的起始地址</li>
+<li>length：和mmap()第二个参数相同即可</li>
+</ul>
+<p><strong>返回值：</strong></p>
+<ul>
+<li>成功：返回0</li>
+<li>失败：返回-1</li>
+</ul>
+<h1 id="2-进程间通信"><a href="#2-进程间通信" class="headerlink" title="2. 进程间通信"></a>2. 进程间通信</h1><p>操作内存映射区和操作管道是不一样的，得到内存映射区之后是直接对内存地址进行操作，管道是通过文件描述符读写队列中的数据，管道的读写是阻塞的，内存映射区的读写是非阻塞的。内存映射区创建成功之后，得到了映射区内存的起始地址，使用相关的内存操作函数读写数据就可以了。</p>
+<h2 id="2-1-有血缘关系"><a href="#2-1-有血缘关系" class="headerlink" title="2.1 有血缘关系"></a>2.1 有血缘关系</h2><p>由于创建子进程会发生虚拟地址空间的复制，那么在父进程中创建的内存映射区也会被复制到子进程中，这样在子进程中就可以直接使用这块内存映射区了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/mman.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 1. 打开或创建一个磁盘文件</span></span><br><span class="line">    <span class="type">int</span> fd = open(<span class="string">&quot;./hello.txt&quot;</span>, O_RDWR | O_CREAT, <span class="number">0644</span>);</span><br><span class="line">    <span class="keyword">if</span> (fd == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;open&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 确保文件大小足够</span></span><br><span class="line">    <span class="type">size_t</span> map_size = <span class="number">4000</span>; <span class="comment">// 内存映射大小</span></span><br><span class="line">    <span class="keyword">if</span> (ftruncate(fd, map_size) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;ftruncate&quot;</span>);</span><br><span class="line">        close(fd);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 创建内存映射区</span></span><br><span class="line">    <span class="type">void</span> *ptr = mmap(<span class="literal">NULL</span>, map_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (ptr == MAP_FAILED) &#123;</span><br><span class="line">        perror(<span class="string">&quot;mmap&quot;</span>);</span><br><span class="line">        close(fd);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 创建子进程</span></span><br><span class="line">    <span class="type">pid_t</span> pid = fork();</span><br><span class="line">    <span class="keyword">if</span> (pid &gt; <span class="number">0</span>) &#123; <span class="comment">// 父进程，写数据</span></span><br><span class="line">        <span class="type">const</span> <span class="type">char</span> *pt = <span class="string">&quot;我是父进程！！！&quot;</span>;</span><br><span class="line">        <span class="built_in">memcpy</span>(ptr, pt, <span class="built_in">strlen</span>(pt) + <span class="number">1</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123; <span class="comment">// 子进程，读数据</span></span><br><span class="line">        usleep(<span class="number">1</span>); <span class="comment">// 确保父进程先写入数据</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;我是子进程，我读到了：%s\n&quot;</span>, (<span class="type">char</span> *)ptr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. 释放内存映射区并关闭文件</span></span><br><span class="line">    munmap(ptr, map_size);</span><br><span class="line">    close(fd);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-2-无血缘关系"><a href="#2-2-无血缘关系" class="headerlink" title="2.2 无血缘关系"></a>2.2 无血缘关系</h2>
+</div>
+
+<!-- post-guide -->
+
+    <div class="post-guide">
+        <div class="item left">
+            
+              <a href="/2024/11/23/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/4.%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98(shm)/">
+                  <i class="fa fa-angle-left" aria-hidden="true"></i>
+                  4.共享内存(shm)
+              </a>
+            
+        </div>
+        <div class="item right">
+            
+              <a href="/2024/11/23/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/1.%E7%AE%A1%E9%81%93/">
+                1.管道
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+              </a>
+            
+        </div>
+    </div>
+
+
+<!-- comment - giscus -->
+
+
+<!-- comment - valine -->
+
+
+<script>
+	
+	
+</script>
+
+	</div>
+	<div id="footer">
+	<p>
+	©<span id="footerYear-start"></span>-<span id="footerYear-end"></span>
+
+	
+        <a href='/' target="_blank">TanG</a>
+	
+	
+	
+	<br>
+	Theme <a href="//github.com/wujun234/hexo-theme-tree" target="_blank">Tree</a>
+	by <a href="//wujun.me" target="_blank">Wu Jun</a>
+	Powered by <a href="//hexo.io" target="_blank">Hexo</a>
+	</p>
+</div>
+
+
+<script type="text/javascript">
+	document.getElementById('footerYear-start').innerHTML = new Date().getFullYear() + '';
+</script>
+
+<script type="text/javascript">
+	document.getElementById('footerYear-end').innerHTML = new Date().getFullYear() + '';
+</script>
+
+	<button id="totop-toggle" class="toggle"><i class="fa fa-angle-double-up" aria-hidden="true"></i></button>
+</body>
+</html>

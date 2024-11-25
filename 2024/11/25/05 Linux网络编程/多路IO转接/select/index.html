@@ -9,7 +9,7 @@
 	
 	<title>
 	
-		About | 
+		select | 
 	 
 	TanG&#39;s Blog
 	</title>
@@ -254,7 +254,7 @@
 							</ul>
 			
 							<ul>
-								<li class="file">
+								<li class="file active">
 									<a href="/2024/11/25/05%20Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/select/">
                      
 										    select
@@ -323,7 +323,7 @@
 	<!-- 引入正文 -->
 	<div id="content" class="content">
 		<h1 id="article-title">
-	About
+	select
 </h1>
 
 <!-- meta -->
@@ -331,11 +331,17 @@
 	
 
 	<span>TanG</span>
-	<span>2024-11-23 17:06:36</span>
+	<span>2024-11-25 15:53:28</span>
 
   <div id="article-categories">
     
+		  <span>Categories：</span>
+      
+    
 
+    
+		    <span>Tags：</span>
+        
     
   </div>
 
@@ -343,21 +349,92 @@
 
 <!-- content -->
 <div id="article-content">
-	<p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+	<h1 id="1-IO多路转接（复用）"><a href="#1-IO多路转接（复用）" class="headerlink" title="1. IO多路转接（复用）"></a>1. IO多路转接（复用）</h1><p>IO多路转接也称为IO多路复用，它是一种网络通信的手段（机制），通过<font color = deeppink>这种方式可以同时检测多个文件描述符并且这个过程是<strong>阻塞</strong>的，一旦检测到有文件描述符就绪（可以读数据或者可以写数据）程序的阻塞就会被解除，之后就可以基于这些（一个&#x2F;多个）就绪的文件描述符进行通信了。</font></p>
+<p>多线程&#x2F;多进程并发 VS IO多路转接（服务器端）</p>
+<ul>
+<li>多线程&#x2F;多进程并发<ul>
+<li>主线程&#x2F;父进程：调用<code>accept()</code>监测客户端连接请求。<ul>
+<li>如果没有新的客户端的连接请求，当前线程&#x2F;进程会阻塞</li>
+<li>如果有新的客户端连接请求解除阻塞，建立连接</li>
+</ul>
+</li>
+<li>子线程&#x2F;子进程：和建立连接的客户端通信<ul>
+<li>调用<code>read()/recv()</code>接收客户端发送的通信数据，如果没有通信数据，当前线程&#x2F;进程会阻塞，数据到达之后阻塞自动解除</li>
+<li>调用<code>write()/send()</code>给客户端发送数据，如果写缓存已满，当前线程&#x2F;进程会阻塞，否则将待发送数据写入写缓冲区中</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>IO多路转接并发<ul>
+<li>使用IO多路转接函数<strong>委托内核检测</strong>服务器端所有的文件描述符（监听和通信类），这个检测过程会导致进程&#x2F;线程的阻塞，如果检测到已就绪的文件描述符阻塞解除，并将这些已就绪的文件描述符传出</li>
+<li>根据类型对传出的所有已就绪文件描述符进行判断，并做出不同的处理<ul>
+<li>监听的文件描述符：和客户端建立连接<ul>
+<li>此时调用<code>accept()</code>是不会导致程序阻塞的，因为坚挺的文件描述符是已就绪的（有新请求）</li>
+</ul>
+</li>
+<li>通信的文件描述符：调用通信函数和已建立连接的客户端通信<ul>
+<li>调用<code>read()/recv()</code>不会阻塞程序，因为通信的文件描述符是就绪的，读缓冲区内已有数据</li>
+<li>调用<code>write()/send()</code>不会阻塞程序，因为通信的文件描述符是就绪的，写缓冲区不满，就可以往里面写数据</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>对这些文件描述符继续进行下一轮的检测（循环往复。。。）</li>
+</ul>
+</li>
+</ul>
+<p><strong><font color = deeppink>与多进程和多线程技术相比，IO多路复用的优势不必创建进程&#x2F;线程，也不必维护这些进程&#x2F;线程，系统开销小。</font></strong></p>
+<h1 id="2-select"><a href="#2-select" class="headerlink" title="2. select"></a>2. select</h1><p>使用<code>select()</code>这种IO多路转接方式需要调用一个同名函数<code>select</code>，这个函数时跨平台的，Linux、Mac、Windows都是支持的。程序员通过调用这个函数委托内核帮助我们检测若干文件描述符的状态。其实就是检测这些文件描述符对应的读写缓冲区的状态：</p>
+<ul>
+<li>读缓冲区：检测里面有没有数据，如果有数据该数据对应的文件描述符就绪</li>
+<li>写缓冲区：检测写缓冲区是否可以写（有没有容量），如果有容量可以写，缓冲区对应的文件描述符就绪</li>
+<li>读写异常：检测读写缓冲区是否有异常，如果有该缓冲区对应的文件描述符就绪。</li>
+</ul>
+<h2 id="2-1-函数原型"><a href="#2-1-函数原型" class="headerlink" title="2.1 函数原型"></a>2.1 函数原型</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">timeval</span>&#123;</span></span><br><span class="line">    <span class="type">time_t</span> tv_sec;</span><br><span class="line">    <span class="type">suseconds_t</span> tv_usec;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">select</span><span class="params">(<span class="type">int</span> nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, <span class="keyword">struct</span> timeval *timeout)</span>;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p><strong>参数：</strong></p>
+<ul>
+<li>nfd：委托内核检测的这三个集和中最大的文件描述符+1<ul>
+<li>内核需要线性遍历这些集和中的文件描述符，这个值是循环结束的条件</li>
+<li>在Windows中这个参数是无效的，指定为-1即可。</li>
+</ul>
+</li>
+<li>readfds：<strong>传入传出参数</strong>。内核只检测这个集合中文件描述符对应的读缓冲区</li>
+<li>writefds：传入传出参数。内核只检测这个集合中文件描述符对应的写缓冲区，不需要可以指定为NULL</li>
+<li>exceptfds：传入传出参数。内核只检测这个集和中文件描述符是否有异常状态，不需要可以指定为NULL</li>
+<li>timeout：超时时长，用来强制解除select()函数的阻塞的<ul>
+<li>NULL：函数检测不到就绪的文件描述符就会一直阻塞</li>
+<li>等待固定时长（秒）：函数检测不到就绪的文件描述符，在指定时长之后强制解除阻塞，函数返回0</li>
+<li>不等待：函数不会阻塞，直接将该参数对应的结构体初始化为0即可。</li>
+</ul>
+</li>
+</ul>
+<p><strong>返回值：</strong></p>
+<ul>
+<li>大于0：成功，返回集和中已就绪的文件描述符的<strong>总个数</strong></li>
+<li>等于0：超时，没有检测到就绪的文件描述符</li>
+<li>等于-1：函数调用失败</li>
+</ul>
+<h2 id="2-2-操作函数"><a href="#2-2-操作函数" class="headerlink" title="2.2 操作函数"></a>2.2 操作函数</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将文件描述符fd从set集和中删除 == 将fd对应的标志位设置为0</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">FD_CLR</span><span class="params">(<span class="type">int</span> fd, fd_set *<span class="built_in">set</span>)</span>;</span><br><span class="line"><span class="comment">// 检测fd是否在set中 == 读一下fd对应的标志位是0还是1</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">FD_ISSET</span><span class="params">(<span class="type">int</span> fd, fd_set *<span class="built_in">set</span>)</span>;</span><br><span class="line"><span class="comment">// 将文件描述符fd添加到set集和中 == 将fd对应的标志位设置为1</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">FD_SET</span><span class="params">(<span class="type">int</span> fd, fd_set *<span class="built_in">set</span>)</span>;</span><br><span class="line"><span class="comment">// 将set集和中，所有的文件描述符对应的标志位设置为0，集和中没有添加任何文件描述符</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">FD_ZERO</span><span class="params">(<span class="type">int</span> fd, fd_set *<span class="built_in">set</span>)</span>;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 
 </div>
 
 <!-- post-guide -->
+
+    <div class="post-guide">
+        <div class="item left">
+            
+        </div>
+        <div class="item right">
+            
+              <a href="/2024/11/25/04%20Linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/7.%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+                7.消息队列
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+              </a>
+            
+        </div>
+    </div>
 
 
 <!-- comment - giscus -->
