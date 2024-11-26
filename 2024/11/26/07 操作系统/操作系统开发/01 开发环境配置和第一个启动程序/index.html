@@ -9,7 +9,7 @@
 	
 	<title>
 	
-		finetune | 
+		01 开发环境配置和第一个启动程序 | 
 	 
 	TanG&#39;s Blog
 	</title>
@@ -309,7 +309,7 @@
 							</ul>
 			
 							<ul>
-								<li class="file active">
+								<li class="file">
 									<a href="/2024/11/24/06%20%E5%A4%A7%E6%A8%A1%E5%9E%8BLLM/LangChain/finetune/">
                      
 										    finetune
@@ -364,7 +364,7 @@
 									</a>
 									
 							<ul>
-								<li class="file">
+								<li class="file active">
 									<a href="/2024/11/26/07%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/01%20%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%92%8C%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%90%AF%E5%8A%A8%E7%A8%8B%E5%BA%8F/">
                      
 										    01 开发环境配置和第一个启动程序
@@ -422,7 +422,7 @@
 	<!-- 引入正文 -->
 	<div id="content" class="content">
 		<h1 id="article-title">
-	finetune
+	01 开发环境配置和第一个启动程序
 </h1>
 
 <!-- meta -->
@@ -430,7 +430,7 @@
 	
 
 	<span>TanG</span>
-	<span>2024-11-24 21:06:04</span>
+	<span>2024-11-26 09:26:57</span>
 
   <div id="article-categories">
     
@@ -448,7 +448,26 @@
 
 <!-- content -->
 <div id="article-content">
-	
+	<h1 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h1><ul>
+<li>虚拟机：Oracle virtual Box</li>
+<li>NASM：基于x86架构的汇编与反汇编软件。</li>
+</ul>
+<h2 id="1-本机Windows制造虚拟磁盘"><a href="#1-本机Windows制造虚拟磁盘" class="headerlink" title="1. 本机Windows制造虚拟磁盘"></a>1. 本机Windows制造虚拟磁盘</h2><p>（1）命令提示符输入：</p>
+<p>diskpart<img src="https://raw.githubusercontent.com/gaotianci99/image/master/imgimage-20241126144000284.png" alt="image-20241126144000284"></p>
+<p>（2）create vdisk file&#x3D;D: \gtcst.vhd maximum&#x3D;10 type&#x3D;fixed</p>
+<p>创建10MB的虚拟磁盘</p>
+<p><img src="https://raw.githubusercontent.com/gaotianci99/image/master/imgimage-20241126144259787.png" alt="image-20241126144259787"></p>
+<p>（3）打开文本编辑器，创建一个hello.asm文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">org 07c00h</span><br><span class="line">mov ax,cs</span><br><span class="line">mov ds,ax</span><br><span class="line">mov es,ax</span><br><span class="line">call Disp</span><br><span class="line">jmp $</span><br><span class="line">Disp:</span><br><span class="line">    mov ax,BootMsg</span><br><span class="line">    mov bp,ax</span><br><span class="line">    mov cx,16</span><br><span class="line">    mov ax,01301h</span><br><span class="line">    mov bx,000ch</span><br><span class="line">    mov dl,0</span><br><span class="line">    int 10h</span><br><span class="line">BootMsg: db &quot;Hello, OS World!&quot;</span><br><span class="line">times 510 - ($-$$)  db 0</span><br><span class="line">dw 0xaa55</span><br></pre></td></tr></table></figure>
+
+<p>（4）通过nasm编译hello.asm文件生成hello.bin</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nasm hello.asm -o hello.bin</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/gaotianci99/image/master/imgimage-20241126150014905.png" alt="image-20241126150014905"></p>
+<p>（5）将工具箱中的dd.exe加入到hello.bin目录下，通过dd将bin文件写入vhd文件</p>
+<p><img src="https://raw.githubusercontent.com/gaotianci99/image/master/imgimage-20241126150900435.png" alt="image-20241126150900435"></p>
+<p>（6）通过虚拟机，引入vhd虚拟磁盘，开机。<br><img src="https://raw.githubusercontent.com/gaotianci99/image/master/imgimage-20241126150740739.png" alt="image-20241126150740739"></p>
+
 </div>
 
 <!-- post-guide -->
@@ -456,16 +475,16 @@
     <div class="post-guide">
         <div class="item left">
             
-              <a href="/2024/11/24/01%20C%E8%AF%AD%E8%A8%80/01/">
+              <a href="/2024/11/26/07%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/02%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
                   <i class="fa fa-angle-left" aria-hidden="true"></i>
-                  01
+                  02 操作系统基础知识
               </a>
             
         </div>
         <div class="item right">
             
-              <a href="/2024/11/24/06%20%E5%A4%A7%E6%A8%A1%E5%9E%8BLLM/LangChain/Langchain/">
-                Langchain
+              <a href="/2024/11/25/06%20%E5%A4%A7%E6%A8%A1%E5%9E%8BLLM/llm-TP/%E5%AE%9E%E9%AA%8C/">
+                实验
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
               </a>
             

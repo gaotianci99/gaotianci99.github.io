@@ -9,7 +9,7 @@
 	
 	<title>
 	
-		finetune | 
+		poll | 
 	 
 	TanG&#39;s Blog
 	</title>
@@ -254,7 +254,7 @@
 							</ul>
 			
 							<ul>
-								<li class="file">
+								<li class="file active">
 									<a href="/2024/11/26/05%20Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5/poll/">
                      
 										    poll
@@ -309,7 +309,7 @@
 							</ul>
 			
 							<ul>
-								<li class="file active">
+								<li class="file">
 									<a href="/2024/11/24/06%20%E5%A4%A7%E6%A8%A1%E5%9E%8BLLM/LangChain/finetune/">
                      
 										    finetune
@@ -422,7 +422,7 @@
 	<!-- 引入正文 -->
 	<div id="content" class="content">
 		<h1 id="article-title">
-	finetune
+	poll
 </h1>
 
 <!-- meta -->
@@ -430,7 +430,7 @@
 	
 
 	<span>TanG</span>
-	<span>2024-11-24 21:06:04</span>
+	<span>2024-11-26 20:59:54</span>
 
   <div id="article-categories">
     
@@ -448,7 +448,43 @@
 
 <!-- content -->
 <div id="article-content">
-	
+	<h1 id="poll函数"><a href="#poll函数" class="headerlink" title="poll函数"></a>poll函数</h1><p>poll的机制与select类似，与select在本质上没有多大区别，使用方法也类似，下面是对于两者的对比：</p>
+<ul>
+<li>内核对文件描述符的检测也是<strong>以线性的方式</strong>进行轮询的，根据描述符的状态进行处理</li>
+<li>poll和select检测的文件描述符集和会在检测过程中<strong>频繁的进行用户区和内核区的拷贝</strong>，它的开销随着文件描述符数量的增加而线性增大，从而效率也会越来越低。</li>
+<li><font color = deeppink><strong>select检测的文件描述符上限是1024，poll没有最大文件描述符数量的限制</strong></font></li>
+<li><font color = deeppink><strong>select可以跨平台使用，poll只能在Linux平台使用</strong></font></li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/gaotianci99/image/master/imgimage-20241126214208611.png" alt="image-20241126214208611"></p>
+<p>poll函数的原型如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;poll.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">pollfd</span>&#123;</span></span><br><span class="line">    <span class="type">int</span> fd; <span class="comment">// 委托内核检测的文件描述符</span></span><br><span class="line">    <span class="type">short</span> events; <span class="comment">//委托内核检测文件描述符的什么事件</span></span><br><span class="line">    <span class="type">short</span> revents; <span class="comment">//文件描述符实际发生的事件，传出参数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">pollfd</span> <span class="title">myfd</span>[100];</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">poll</span><span class="params">(<span class="keyword">struct</span> pollfd *fds, <span class="type">nfds_t</span> nfds, <span class="type">int</span> timeout)</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>函数参数：</strong></p>
+<ul>
+<li><p>fds：这是一个<code>struct pollfd</code>类型的数组，里面存储了待检测的文件描述符的信息</p>
+<ul>
+<li>fd：委托内核检测的文件描述符</li>
+<li>events：委托内核检测的fd事件（输入、输出、错误），每一个事件有多个取值</li>
+<li>revents：这是一个传出参数，数据由内核写入，存储内核检测之后的结果</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/gaotianci99/image/master/imgimage-20241126212725429.png" alt="image-20241126212725429"></p>
+</li>
+<li><p>nfds：第一个参数数组中最后一个有效元素的下标+1</p>
+</li>
+<li><p>timeout：指定poll函数的阻塞时长</p>
+<ul>
+<li>-1：一直阻塞。</li>
+<li>0：不阻塞。</li>
+<li>&gt; 0：阻塞指定的毫秒数之后，解除阻塞</li>
+</ul>
+</li>
+</ul>
+<p><strong>函数返回值：</strong></p>
+<ul>
+<li>成功：返回一个大于0的数，表示检测的集和中已就绪的文件描述符的总个数。</li>
+<li>失败：返回-1</li>
+</ul>
+
 </div>
 
 <!-- post-guide -->
@@ -456,16 +492,11 @@
     <div class="post-guide">
         <div class="item left">
             
-              <a href="/2024/11/24/01%20C%E8%AF%AD%E8%A8%80/01/">
-                  <i class="fa fa-angle-left" aria-hidden="true"></i>
-                  01
-              </a>
-            
         </div>
         <div class="item right">
             
-              <a href="/2024/11/24/06%20%E5%A4%A7%E6%A8%A1%E5%9E%8BLLM/LangChain/Langchain/">
-                Langchain
+              <a href="/2024/11/26/07%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/04%20%E5%BC%95%E5%AF%BC%E5%8C%BA%E4%B8%8EBIOS%E4%B8%8B%E7%BC%96%E7%A8%8B/">
+                04 引导区与BIOS下编程
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
               </a>
             

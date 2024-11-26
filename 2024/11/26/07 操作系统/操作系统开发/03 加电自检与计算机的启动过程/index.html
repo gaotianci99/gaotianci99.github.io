@@ -9,7 +9,7 @@
 	
 	<title>
 	
-		finetune | 
+		03 加电自检与计算机的启动过程 | 
 	 
 	TanG&#39;s Blog
 	</title>
@@ -309,7 +309,7 @@
 							</ul>
 			
 							<ul>
-								<li class="file active">
+								<li class="file">
 									<a href="/2024/11/24/06%20%E5%A4%A7%E6%A8%A1%E5%9E%8BLLM/LangChain/finetune/">
                      
 										    finetune
@@ -386,7 +386,7 @@
 							</ul>
 			
 							<ul>
-								<li class="file">
+								<li class="file active">
 									<a href="/2024/11/26/07%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/03%20%E5%8A%A0%E7%94%B5%E8%87%AA%E6%A3%80%E4%B8%8E%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/">
                      
 										    03 加电自检与计算机的启动过程
@@ -422,7 +422,7 @@
 	<!-- 引入正文 -->
 	<div id="content" class="content">
 		<h1 id="article-title">
-	finetune
+	03 加电自检与计算机的启动过程
 </h1>
 
 <!-- meta -->
@@ -430,7 +430,7 @@
 	
 
 	<span>TanG</span>
-	<span>2024-11-24 21:06:04</span>
+	<span>2024-11-26 15:52:26</span>
 
   <div id="article-categories">
     
@@ -448,7 +448,37 @@
 
 <!-- content -->
 <div id="article-content">
-	
+	<h1 id="POST（Power-on-self-testing）"><a href="#POST（Power-on-self-testing）" class="headerlink" title="POST（Power on self testing）"></a>POST（Power on self testing）</h1><p>计算机在启动时，首先不是操作系统运行，而是BIOS，BIOS固定在主板，与操作系统无关。</p>
+<p>在操作系统运行之前，就是BIOS管理计算机，运行完毕，让操作系统接管计算机</p>
+<h1 id="1-POST上电自检"><a href="#1-POST上电自检" class="headerlink" title="1. POST上电自检"></a>1. POST上电自检</h1><p>计算机接通电源后，系统首先由POST（Power On Self Test，上电自检）程序来对内部各个设备进行检查。通常完整的POST自检包括对CPU、640KB基本内存、1MB以上的扩展内存、ROM、主板、CMOS存储器、串并口、显卡、软硬盘子系统及键盘进行测试，一旦在自检中发现问题，系统将给出提示信息或鸣笛警告。</p>
+<h1 id="2-BIOS系统启动自举程序"><a href="#2-BIOS系统启动自举程序" class="headerlink" title="2. BIOS系统启动自举程序"></a>2. BIOS系统启动自举程序</h1><p>系统完成POST自检后，ROM BIOS就首先按照系统CMOS设置中保存的启动顺序搜索软硬盘驱动器及CD-ROM、网络服务器等有效的启动驱动器，读入操作系统引导记录，然后将系统控制权交给引导记录，并由引导记录来完成系统的顺序启动。</p>
+<p>BIOS 存储区域的物理分布主要包括以下几部分：</p>
+<ul>
+<li><strong>主板上的 BIOS 芯片</strong>：<ul>
+<li>BIOS 通常存储在主板上的一个专用闪存芯片中，这个芯片被连接到主板的一个特定插槽上，通常会标识为 <code>BIOS</code>、<code>UEFI</code> 或 <code>FLASH</code>。</li>
+<li>现代计算机的 BIOS 大多存储在一个大小为 4MB 至 32MB 的闪存芯片中，这个芯片通常位于主板的中心位置，靠近 CPU 和内存插槽。</li>
+</ul>
+</li>
+<li><strong>BIOS 存储分布</strong>：<ul>
+<li>BIOS 存储区域通常会分为多个部分：<ol>
+<li><strong>启动代码（Boot Code）</strong>：负责计算机开机时初始化硬件并加载操作系统引导程序（如引导扇区或引导加载程序）。</li>
+<li><strong>硬件初始化（Hardware Initialization）</strong>：包含对硬件组件的初始化程序，确保 CPU、内存、硬盘、显示适配器等设备能够正常工作。</li>
+<li><strong>系统设置（System Settings）</strong>：包括一些基本配置选项（如时钟、引导顺序、硬盘设置等），通常可以通过 BIOS 设置界面（如 “Setup” 或 “UEFI Setup”）进行修改。</li>
+<li><strong>驱动程序（Drivers）</strong>：一些最基本的硬件驱动程序，提供对计算机硬件的初步支持。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<p>BIOS的启动过程：</p>
+<p>当计算机启动时，CPU 会首先执行 <strong>POST（Power-On Self Test）</strong>，然后加载和执行存储在 BIOS 中的启动程序。启动过程大致如下：</p>
+<ol>
+<li><strong>加电自检（POST）</strong>：开机后，CPU 会开始执行 BIOS 中的自检程序，检查系统硬件（如内存、CPU、显卡等）是否正常。</li>
+<li><strong>硬件初始化</strong>：BIOS 会初始化计算机的硬件，设置硬件参数，配置外围设备。</li>
+<li><strong>加载引导程序</strong>：完成硬件初始化后，BIOS 会查找并加载引导程序，通常是操作系统的启动引导程序。BIOS 会根据用户设置的启动顺序，查找硬盘、U盘、光盘等设备中的引导扇区。</li>
+<li><strong>启动操作系统</strong>：一旦找到有效的引导程序，BIOS 会将控制权交给操作系统的引导程序（例如，GRUB、Windows Boot Manager等），操作系统开始加载。</li>
+</ol>
+
 </div>
 
 <!-- post-guide -->
@@ -456,16 +486,16 @@
     <div class="post-guide">
         <div class="item left">
             
-              <a href="/2024/11/24/01%20C%E8%AF%AD%E8%A8%80/01/">
+              <a href="/2024/11/26/07%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/04%20%E5%BC%95%E5%AF%BC%E5%8C%BA%E4%B8%8EBIOS%E4%B8%8B%E7%BC%96%E7%A8%8B/">
                   <i class="fa fa-angle-left" aria-hidden="true"></i>
-                  01
+                  04 引导区与BIOS下编程
               </a>
             
         </div>
         <div class="item right">
             
-              <a href="/2024/11/24/06%20%E5%A4%A7%E6%A8%A1%E5%9E%8BLLM/LangChain/Langchain/">
-                Langchain
+              <a href="/2024/11/26/07%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/02%20%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+                02 操作系统基础知识
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
               </a>
             
